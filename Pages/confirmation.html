@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Appointment Confirmation - SmileCare Dental</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .confirmation-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .confirmation-success {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .confirmation-icon {
+      font-size: 4rem;
+      color: var(--success-color);
+      margin-bottom: 1rem;
+    }
+
+    .confirmation-details {
+      background-color: var(--light-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: var(--light-text);
+    }
+
+    .detail-value {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .confirmation-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .confirmation-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .alert-info {
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar container">
+      <div class="logo">SmileCare Dental</div>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <a href="register.html" class="btn btn-primary">Register</a>
+        <a href="login.html" class="btn btn-outline">Login</a>
+      </div>
+      <button class="menu-toggle">☰</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Appointment Confirmation</h1>
+      <p>Thank you for booking with SmileCare Dental</p>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="confirmation-container">
+      <div class="card">
+        <div class="card-body">
+          <div class="confirmation-success">
+            <div class="confirmation-icon">✓</div>
+            <h2 style="color: var(--success-color);">Appointment Confirmed!</h2>
+            <p style="color: var(--light-text); margin-top: 0.5rem;">Your appointment has been successfully booked.</p>
+          </div>
+
+          <div class="confirmation-details">
+            <div class="detail-row">
+              <span class="detail-label">Confirmation #</span>
+              <span class="detail-value" id="confirmationId">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Patient Name</span>
+              <span class="detail-value" id="patientName">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Service</span>
+              <span class="detail-value" id="serviceName">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Dentist</span>
+              <span class="detail-value" id="dentistName">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Date</span>
+              <span class="detail-value" id="appointmentDate">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Time</span>
+              <span class="detail-value" id="appointmentTime">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Contact Email</span>
+              <span class="detail-value" id="contactEmail">-</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Contact Phone</span>
+              <span class="detail-value" id="contactPhone">-</span>
+            </div>
+          </div>
+
+          <div class="confirmation-actions">
+            <button id="printBtn" class="btn btn-outline">🖨️ Print</button>
+            <a href="../index.html" class="btn btn-primary">Back to Home</a>
+          </div>
+
+          <div class="alert alert-info" style="margin-top: 1.5rem;">
+            <strong>Important Reminders:</strong>
+            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+              <li>Please arrive 10 minutes early</li>
+              <li>Bring your insurance card if applicable</li>
+              <li>Inform us of any dental allergies</li>
+              <li>Cancel 24 hours in advance if needed</li>
+            </ul>
+          </div>
+
+          <div style="background-color: var(--light-bg); padding: 1rem; border-radius: 5px; margin-top: 1rem; text-align: center;">
+            <p style="margin: 0;">A confirmation email has been sent to <strong id="emailConfirm">your email</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SmileCare Dental</h4>
+          <p>Your partner in dental health and beautiful smiles.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="services.html">Services</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Contact Info</h4>
+          <a href="tel:+1234567890">+1 (234) 567-8900</a>
+          <a href="mailto:info@smilecare.com">info@smilecare.com</a>
+          <p>123 Dental Street, City, ST 12345</p>
+        </div>
+        <div class="footer-section">
+          <h4>Hours</h4>
+          <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+          <p>Saturday: 10:00 AM - 4:00 PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SmileCare Dental Practice. All rights reserved. | <a href="admin-login.html" style="color: #bbb; font-size: 0.9rem;">Admin Portal</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    function loadConfirmationDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const appointmentId = urlParams.get('id');
+
+      if (!appointmentId) {
+        window.location.href = 'booking.html';
+        return;
+      }
+
+      const appointments = getAppointments();
+      const appointment = appointments.find(a => a.id === appointmentId);
+
+      if (!appointment) {
+        showAlert('Appointment not found', 'danger');
+        window.location.href = 'booking.html';
+        return;
+      }
+
+      document.getElementById('confirmationId').textContent = appointmentId.substring(0, 8).toUpperCase();
+      document.getElementById('patientName').textContent = appointment.patientName;
+      document.getElementById('serviceName').textContent = appointment.service.replace('-', ' ').toUpperCase();
+      document.getElementById('dentistName').textContent = appointment.dentist.replace('dr-', 'Dr. ').replace(/-/g, ' ');
+      document.getElementById('appointmentDate').textContent = formatDate(appointment.date);
+      document.getElementById('appointmentTime').textContent = formatTime(appointment.time);
+      document.getElementById('contactEmail').textContent = appointment.email;
+      document.getElementById('contactPhone').textContent = appointment.phone;
+      document.getElementById('emailConfirm').textContent = appointment.email;
+    }
+
+    document.getElementById('printBtn').addEventListener('click', () => {
+      window.print();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadConfirmationDetails();
+    });
+  </script>
+</body>
+</html>

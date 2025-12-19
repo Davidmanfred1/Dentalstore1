@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Dashboard - SmileCare Dental</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .dashboard-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .sidebar {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      height: fit-content;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-menu a {
+      display: block;
+      padding: 0.75rem 1rem;
+      border-radius: 5px;
+      color: var(--dark-text);
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .main-content {
+      background-color: white;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .appointment-card {
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--primary-color);
+      padding: 1rem;
+      border-radius: 5px;
+      margin-bottom: 1rem;
+    }
+
+    .appointment-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.75rem;
+    }
+
+    .appointment-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-confirmed {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .status-pending {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    .status-cancelled {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .appointment-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .appointment-detail {
+      font-size: 0.9rem;
+    }
+
+    .appointment-detail strong {
+      color: var(--primary-color);
+    }
+
+    .appointment-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .appointment-actions button {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .profile-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .info-group {
+      padding: 1rem;
+      background-color: var(--light-bg);
+      border-radius: 5px;
+    }
+
+    .info-group h4 {
+      color: var(--primary-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .info-group p {
+      margin: 0.25rem 0;
+      font-size: 0.95rem;
+    }
+
+    .no-appointments {
+      text-align: center;
+      padding: 2rem;
+      background-color: var(--light-bg);
+      border-radius: 5px;
+      color: var(--light-text);
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-container {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        order: 2;
+      }
+
+      .main-content {
+        order: 1;
+      }
+
+      .appointment-actions {
+        flex-direction: column;
+      }
+
+      .appointment-actions button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar container">
+      <div class="logo">SmileCare Dental</div>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <span id="userGreeting" style="color: var(--dark-text); font-weight: 500; margin-right: 1rem;"></span>
+        <button id="logoutBtn" class="btn btn-danger">Logout</button>
+      </div>
+      <button class="menu-toggle">☰</button>
+    </div>
+  </nav>
+
+  <section class="section container">
+    <h1 class="mb-4">Patient Dashboard</h1>
+
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <ul class="sidebar-menu">
+          <li><a href="#" class="menu-item active" data-section="overview">📊 Overview</a></li>
+          <li><a href="#" class="menu-item" data-section="profile">👤 My Profile</a></li>
+          <li><a href="#" class="menu-item" data-section="appointments">📅 My Appointments</a></li>
+          <li><a href="#" class="menu-item" data-section="book">➕ Book Appointment</a></li>
+        </ul>
+      </aside>
+
+      <main class="main-content">
+        <!-- Overview Section -->
+        <div id="overview-section" class="section-content">
+          <h2 class="section-title">Welcome Back!</h2>
+          <div class="profile-info">
+            <div class="info-group">
+              <h4>📋 Next Appointment</h4>
+              <p id="nextAppointmentInfo">No upcoming appointments</p>
+            </div>
+            <div class="info-group">
+              <h4>📞 Contact Info</h4>
+              <p id="overviewEmail">Email: -</p>
+              <p id="overviewPhone">Phone: -</p>
+            </div>
+            <div class="info-group">
+              <h4>⚡ Quick Actions</h4>
+              <a href="booking.html" class="btn btn-primary" style="display: inline-block; margin-top: 0.5rem;">Book Appointment</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile-section" class="section-content" style="display: none;">
+          <h2 class="section-title">My Profile</h2>
+          <div class="profile-info">
+            <div class="info-group">
+              <h4>👤 Personal Information</h4>
+              <p><strong>Name:</strong> <span id="profileName">-</span></p>
+              <p><strong>Email:</strong> <span id="profileEmail">-</span></p>
+              <p><strong>Phone:</strong> <span id="profilePhone">-</span></p>
+              <p><strong>Date of Birth:</strong> <span id="profileDOB">-</span></p>
+            </div>
+            <div class="info-group">
+              <h4>📍 Address</h4>
+              <p id="profileAddress">-</p>
+            </div>
+            <div class="info-group">
+              <h4>🏥 Insurance Information</h4>
+              <p><strong>Company:</strong> <span id="profileInsuranceCompany">-</span></p>
+              <p><strong>ID:</strong> <span id="profileInsuranceId">-</span></p>
+            </div>
+          </div>
+          <a href="register.html" class="btn btn-outline" style="margin-top: 1rem;">Edit Profile</a>
+        </div>
+
+        <!-- Appointments Section -->
+        <div id="appointments-section" class="section-content" style="display: none;">
+          <h2 class="section-title">My Appointments</h2>
+          <div id="appointmentsList"></div>
+        </div>
+
+        <!-- Book Appointment Section -->
+        <div id="book-section" class="section-content" style="display: none;">
+          <h2 class="section-title">Book New Appointment</h2>
+          <p style="margin-bottom: 1.5rem;">Redirecting to booking page...</p>
+          <script>
+            setTimeout(() => {
+              window.location.href = 'booking.html';
+            }, 1000);
+          </script>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SmileCare Dental</h4>
+          <p>Your partner in dental health and beautiful smiles.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="services.html">Services</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Contact Info</h4>
+          <a href="tel:+1234567890">+1 (234) 567-8900</a>
+          <a href="mailto:info@smilecare.com">info@smilecare.com</a>
+          <p>123 Dental Street, City, ST 12345</p>
+        </div>
+        <div class="footer-section">
+          <h4>Hours</h4>
+          <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+          <p>Saturday: 10:00 AM - 4:00 PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SmileCare Dental Practice. All rights reserved. | <a href="admin-login.html" style="color: #bbb; font-size: 0.9rem;">Admin Portal</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const currentUser = getCurrentUser();
+
+    if (!currentUser) {
+      window.location.href = 'login.html';
+    }
+
+    function loadPatientData() {
+      const user = getCurrentUser();
+      if (!user) return;
+
+      const fullName = `${user.firstName} ${user.lastName}`;
+      document.getElementById('userGreeting').textContent = `Welcome, ${user.firstName}!`;
+
+      document.getElementById('profileName').textContent = fullName;
+      document.getElementById('profileEmail').textContent = user.email;
+      document.getElementById('profilePhone').textContent = user.phone;
+      document.getElementById('profileDOB').textContent = formatDate(user.dateOfBirth);
+
+      if (user.address) {
+        document.getElementById('profileAddress').innerHTML = `
+          ${user.address.street}<br>
+          ${user.address.city}, ${user.address.state} ${user.address.zipcode}<br>
+          ${user.address.country}
+        `;
+      }
+
+      document.getElementById('profileInsuranceCompany').textContent = user.insurance?.company || 'Not provided';
+      document.getElementById('profileInsuranceId').textContent = user.insurance?.id || 'Not provided';
+
+      document.getElementById('overviewEmail').textContent = `Email: ${user.email}`;
+      document.getElementById('overviewPhone').textContent = `Phone: ${user.phone}`;
+
+      loadAppointments();
+    }
+
+    function loadAppointments() {
+      const user = getCurrentUser();
+      const appointments = getAppointments().filter(a => a.email === user.email);
+      const appointmentsList = document.getElementById('appointmentsList');
+
+      if (appointments.length === 0) {
+        appointmentsList.innerHTML = '<div class="no-appointments"><p>You have no appointments yet. <a href="booking.html" style="color: var(--primary-color); font-weight: 600;">Book one now!</a></p></div>';
+        document.getElementById('nextAppointmentInfo').textContent = 'No upcoming appointments';
+        return;
+      }
+
+      const sortedAppointments = appointments.sort((a, b) => new Date(a.date) - new Date(b.date));
+      const nextAppointment = sortedAppointments[0];
+
+      document.getElementById('nextAppointmentInfo').textContent = `${formatDate(nextAppointment.date)} at ${formatTime(nextAppointment.time)}`;
+
+      appointmentsList.innerHTML = sortedAppointments.map(appointment => `
+        <div class="appointment-card">
+          <div class="appointment-header">
+            <div>
+              <h3 style="margin: 0; margin-bottom: 0.5rem;">${appointment.service}</h3>
+            </div>
+            <span class="appointment-status status-${appointment.status}">${appointment.status.toUpperCase()}</span>
+          </div>
+          <div class="appointment-details">
+            <div class="appointment-detail">
+              <strong>Date:</strong><br>${formatDate(appointment.date)}
+            </div>
+            <div class="appointment-detail">
+              <strong>Time:</strong><br>${formatTime(appointment.time)}
+            </div>
+            <div class="appointment-detail">
+              <strong>Dentist:</strong><br>${appointment.dentist}
+            </div>
+            <div class="appointment-detail">
+              <strong>ID:</strong><br>${appointment.id.substring(0, 8).toUpperCase()}
+            </div>
+          </div>
+          <div class="appointment-actions">
+            <button onclick="rescheduleAppointment('${appointment.id}')" class="btn btn-outline">Reschedule</button>
+            <button onclick="cancelAppointmentHandler('${appointment.id}')" class="btn btn-danger">Cancel</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function cancelAppointmentHandler(appointmentId) {
+      if (confirm('Are you sure you want to cancel this appointment?')) {
+        const result = cancelAppointment(appointmentId);
+        if (result.success) {
+          showAlert(result.message, 'success');
+          loadAppointments();
+        }
+      }
+    }
+
+    function rescheduleAppointment(appointmentId) {
+      window.location.href = `booking.html?reschedule=${appointmentId}`;
+    }
+
+    const menuItems = document.querySelectorAll('.menu-item');
+    const sections = document.querySelectorAll('.section-content');
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        menuItems.forEach(m => m.classList.remove('active'));
+        item.classList.add('active');
+
+        const sectionId = item.dataset.section + '-section';
+        sections.forEach(section => section.style.display = 'none');
+        document.getElementById(sectionId).style.display = 'block';
+      });
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      logout();
+      showAlert('You have been logged out', 'success');
+      setTimeout(() => {
+        window.location.href = '../index.html';
+      }, 1000);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPatientData();
+    });
+  </script>
+</body>
+</html>

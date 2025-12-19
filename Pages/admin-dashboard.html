@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - SmileCare Dental</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .admin-container {
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .admin-sidebar {
+      background-color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      height: fit-content;
+      position: sticky;
+      top: 80px;
+    }
+
+    .admin-badge {
+      background-color: var(--danger-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+    }
+
+    .sidebar-menu li {
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-menu a {
+      display: block;
+      padding: 0.75rem 1rem;
+      border-radius: 5px;
+      color: var(--dark-text);
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background-color: var(--danger-color);
+      color: white;
+    }
+
+    .admin-content {
+      background-color: white;
+      border-radius: 8px;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      border-bottom: 2px solid var(--danger-color);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #1e88e5 0%, #0d47a1 100%);
+      color: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+
+    .patients-table,
+    .appointments-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 2rem;
+    }
+
+    .patients-table th,
+    .appointments-table th {
+      background-color: var(--light-bg);
+      padding: 1rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--primary-color);
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .patients-table td,
+    .appointments-table td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .patients-table tr:hover,
+    .appointments-table tr:hover {
+      background-color: var(--light-bg);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .action-buttons button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+    }
+
+    .search-box {
+      margin-bottom: 1.5rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+    }
+
+    .export-btn {
+      padding: 0.75rem 1.5rem;
+    }
+
+    .no-data {
+      text-align: center;
+      padding: 2rem;
+      color: var(--light-text);
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 3000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      border-bottom: 2px solid var(--light-bg);
+      padding-bottom: 1rem;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--light-text);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--light-bg);
+    }
+
+    .detail-row strong {
+      color: var(--primary-color);
+      min-width: 150px;
+    }
+
+    @media (max-width: 768px) {
+      .admin-container {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-sidebar {
+        order: 2;
+        position: relative;
+        top: auto;
+      }
+
+      .admin-content {
+        order: 1;
+      }
+
+      .patients-table,
+      .appointments-table {
+        font-size: 0.9rem;
+      }
+
+      .patients-table th,
+      .appointments-table th,
+      .patients-table td,
+      .appointments-table td {
+        padding: 0.75rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .action-buttons button {
+        width: 100%;
+      }
+
+      .modal-content {
+        width: 90%;
+        max-height: 90vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar container">
+      <div class="logo">SmileCare Dental - Admin</div>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <span id="adminName" style="color: var(--dark-text); font-weight: 500; margin-right: 1rem;"></span>
+        <button id="logoutBtn" class="btn btn-danger">Logout</button>
+      </div>
+      <button class="menu-toggle">☰</button>
+    </div>
+  </nav>
+
+  <section class="section container">
+    <div class="admin-container">
+      <aside class="admin-sidebar">
+        <div class="admin-badge">🔐 ADMIN PANEL</div>
+        <ul class="sidebar-menu">
+          <li><a href="#" class="menu-item active" data-section="overview">📊 Overview</a></li>
+          <li><a href="#" class="menu-item" data-section="patients">👥 Patients Database</a></li>
+          <li><a href="#" class="menu-item" data-section="appointments">📅 Appointments</a></li>
+          <li><a href="#" class="menu-item" data-section="reports">📈 Reports</a></li>
+          <li><a href="#" class="menu-item" data-section="settings">⚙️ Settings</a></li>
+        </ul>
+      </aside>
+
+      <main class="admin-content">
+        <!-- Overview Section -->
+        <div id="overview-section" class="section-content">
+          <h2 class="section-title">Dashboard Overview</h2>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number" id="totalPatients">0</div>
+              <div class="stat-label">Total Patients</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="totalAppointments">0</div>
+              <div class="stat-label">Total Appointments</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="confirmedAppointments">0</div>
+              <div class="stat-label">Confirmed Bookings</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="pendingAppointments">0</div>
+              <div class="stat-label">Pending Bookings</div>
+            </div>
+          </div>
+
+          <h3 style="margin-top: 2rem;">Recent Appointments</h3>
+          <div id="recentAppointments"></div>
+        </div>
+
+        <!-- Patients Database Section -->
+        <div id="patients-section" class="section-content" style="display: none;">
+          <h2 class="section-title">Patients Database</h2>
+          
+          <div class="search-box">
+            <input type="text" id="patientSearch" placeholder="Search by name, email, or phone...">
+            <button onclick="exportPatientsData()" class="btn btn-secondary export-btn">📥 Export</button>
+          </div>
+
+          <div id="patientsList"></div>
+        </div>
+
+        <!-- Appointments Section -->
+        <div id="appointments-section" class="section-content" style="display: none;">
+          <h2 class="section-title">Appointments Management</h2>
+          
+          <div class="search-box">
+            <input type="text" id="appointmentSearch" placeholder="Search by patient name...">
+            <button onclick="exportAppointmentsData()" class="btn btn-secondary export-btn">📥 Export</button>
+          </div>
+
+          <div id="appointmentsList"></div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports-section" class="section-content" style="display: none;">
+          <h2 class="section-title">Analytics & Reports</h2>
+          
+          <div class="stats-grid" style="margin-top: 1.5rem;">
+            <div class="stat-card">
+              <div class="stat-number" id="appointmentRate">0%</div>
+              <div class="stat-label">Booking Conversion Rate</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="avgAppointments">0</div>
+              <div class="stat-label">Avg. Appointments/Patient</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="registrationTrend">↑</div>
+              <div class="stat-label">Patient Growth</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="cancellationRate">0%</div>
+              <div class="stat-label">Cancellation Rate</div>
+            </div>
+          </div>
+
+          <div style="background-color: var(--light-bg); padding: 1.5rem; border-radius: 8px; margin-top: 2rem;">
+            <h3>Service Popular by Requests</h3>
+            <div id="serviceBreakdown" style="margin-top: 1rem;"></div>
+          </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings-section" class="section-content" style="display: none;">
+          <h2 class="section-title">Settings & Configuration</h2>
+          
+          <div class="card" style="background-color: var(--light-bg);">
+            <div class="card-body">
+              <h3>Admin Account</h3>
+              <p><strong>Username:</strong> admin</p>
+              <p><strong>Role:</strong> System Administrator</p>
+              <p><strong>Last Login:</strong> <span id="lastLogin">-</span></p>
+              
+              <button onclick="changeAdminPassword()" class="btn btn-primary" style="margin-top: 1rem;">Change Password</button>
+            </div>
+          </div>
+
+          <div class="card" style="background-color: var(--light-bg); margin-top: 1.5rem;">
+            <div class="card-body">
+              <h3>Data Management</h3>
+              <p>Manage and maintain patient and appointment database</p>
+              
+              <button onclick="clearAllData()" class="btn btn-danger" style="margin-top: 1rem;">🗑️ Clear All Data (Caution!)</button>
+            </div>
+          </div>
+
+          <div class="card" style="background-color: var(--light-bg); margin-top: 1.5rem;">
+            <div class="card-body">
+              <h3>Database Statistics</h3>
+              <p><strong>Total Records:</strong> <span id="totalRecords">0</span></p>
+              <p><strong>Storage Used:</strong> <span id="storageUsed">0 KB</span></p>
+              <p><strong>Last Backup:</strong> Never</p>
+              
+              <button onclick="backupData()" class="btn btn-success" style="margin-top: 1rem;">💾 Backup Data</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </section>
+
+  <!-- Patient Details Modal -->
+  <div id="patientModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 style="margin: 0;">Patient Details</h2>
+        <button class="modal-close" onclick="closeModal('patientModal')">×</button>
+      </div>
+      <div id="patientModalBody"></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SmileCare Dental Admin</h4>
+          <p>Secure Administrative Portal</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="../index.html">Patient Portal</a>
+          <a href="admin-login.html">Admin Login</a>
+        </div>
+        <div class="footer-section">
+          <h4>Support</h4>
+          <a href="tel:+1234567890">+1 (234) 567-8900</a>
+          <a href="mailto:admin@smilecare.com">admin@smilecare.com</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SmileCare Dental - Admin Portal. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const adminUser = JSON.parse(localStorage.getItem('adminUser')) || null;
+
+    if (!adminUser || adminUser.role !== 'admin') {
+      window.location.href = 'admin-login.html';
+    }
+
+    document.getElementById('adminName').textContent = `Admin: ${adminUser.username}`;
+    document.getElementById('lastLogin').textContent = new Date(adminUser.loginTime).toLocaleString();
+
+    function loadDashboardData() {
+      const patients = getPatients();
+      const appointments = getAppointments();
+
+      document.getElementById('totalPatients').textContent = patients.length;
+      document.getElementById('totalAppointments').textContent = appointments.length;
+
+      const confirmedCount = appointments.filter(a => a.status === 'confirmed').length;
+      const pendingCount = appointments.filter(a => a.status === 'pending').length;
+
+      document.getElementById('confirmedAppointments').textContent = confirmedCount;
+      document.getElementById('pendingAppointments').textContent = pendingCount;
+
+      loadRecentAppointments();
+      loadPatientsTable();
+      loadAppointmentsTable();
+      loadReports();
+      updateStorageStats();
+    }
+
+    function loadRecentAppointments() {
+      const appointments = getAppointments();
+      const recentAppointments = appointments
+        .sort((a, b) => new Date(b.date) - new Date(a.date))
+        .slice(0, 5);
+
+      const container = document.getElementById('recentAppointments');
+
+      if (recentAppointments.length === 0) {
+        container.innerHTML = '<div class="no-data">No appointments yet</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Service</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${recentAppointments.map(apt => `
+              <tr>
+                <td>${apt.patientName}</td>
+                <td>${apt.service}</td>
+                <td>${formatDate(apt.date)}</td>
+                <td>${formatTime(apt.time)}</td>
+                <td><span class="appointment-status status-${apt.status}">${apt.status.toUpperCase()}</span></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function loadPatientsTable() {
+      const patients = getPatients();
+      const searchTerm = document.getElementById('patientSearch')?.value.toLowerCase() || '';
+      
+      const filteredPatients = patients.filter(p => 
+        p.firstName.toLowerCase().includes(searchTerm) ||
+        p.lastName.toLowerCase().includes(searchTerm) ||
+        p.email.toLowerCase().includes(searchTerm) ||
+        p.phone.includes(searchTerm)
+      );
+
+      const container = document.getElementById('patientsList');
+
+      if (filteredPatients.length === 0) {
+        container.innerHTML = '<div class="no-data">No patients found</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="patients-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>DOB</th>
+              <th>Reg. Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filteredPatients.map(patient => `
+              <tr>
+                <td>${patient.firstName} ${patient.lastName}</td>
+                <td>${patient.email}</td>
+                <td>${patient.phone}</td>
+                <td>${formatDate(patient.dateOfBirth)}</td>
+                <td>${formatDate(patient.registrationDate)}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button onclick="viewPatientDetails('${patient.id}')" class="btn btn-primary">View</button>
+                    <button onclick="deletePatient('${patient.id}')" class="btn btn-danger">Delete</button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function loadAppointmentsTable() {
+      const appointments = getAppointments();
+      const searchTerm = document.getElementById('appointmentSearch')?.value.toLowerCase() || '';
+      
+      const filteredAppointments = appointments.filter(a => 
+        a.patientName.toLowerCase().includes(searchTerm)
+      );
+
+      const container = document.getElementById('appointmentsList');
+
+      if (filteredAppointments.length === 0) {
+        container.innerHTML = '<div class="no-data">No appointments found</div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <table class="appointments-table">
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Service</th>
+              <th>Date</th>
+              <th>Time</th>
+              <th>Dentist</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filteredAppointments.map(apt => `
+              <tr>
+                <td>${apt.patientName}</td>
+                <td>${apt.service}</td>
+                <td>${formatDate(apt.date)}</td>
+                <td>${formatTime(apt.time)}</td>
+                <td>${apt.dentist}</td>
+                <td><span class="appointment-status status-${apt.status}">${apt.status.toUpperCase()}</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button onclick="cancelAppointmentAdmin('${apt.id}')" class="btn btn-danger">Cancel</button>
+                  </div>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function loadReports() {
+      const patients = getPatients();
+      const appointments = getAppointments();
+
+      const appointmentRate = patients.length > 0 ? Math.round((appointments.length / patients.length) * 100) : 0;
+      const avgAppointments = patients.length > 0 ? (appointments.length / patients.length).toFixed(1) : 0;
+      const cancelledCount = appointments.filter(a => a.status === 'cancelled').length;
+      const cancellationRate = appointments.length > 0 ? Math.round((cancelledCount / appointments.length) * 100) : 0;
+
+      document.getElementById('appointmentRate').textContent = appointmentRate + '%';
+      document.getElementById('avgAppointments').textContent = avgAppointments;
+      document.getElementById('cancellationRate').textContent = cancellationRate + '%';
+
+      const serviceBreakdown = {};
+      appointments.forEach(apt => {
+        serviceBreakdown[apt.service] = (serviceBreakdown[apt.service] || 0) + 1;
+      });
+
+      const serviceList = Object.entries(serviceBreakdown)
+        .sort((a, b) => b[1] - a[1])
+        .map(([service, count]) => `<p>${service}: <strong>${count}</strong> bookings</p>`)
+        .join('');
+
+      document.getElementById('serviceBreakdown').innerHTML = serviceList || '<p>No booking data available</p>';
+    }
+
+    function viewPatientDetails(patientId) {
+      const patients = getPatients();
+      const patient = patients.find(p => p.id === patientId);
+
+      if (!patient) return;
+
+      const patientAppointments = getAppointments().filter(a => a.email === patient.email);
+
+      const modalBody = document.getElementById('patientModalBody');
+      modalBody.innerHTML = `
+        <div class="detail-row">
+          <strong>Name:</strong>
+          <span>${patient.firstName} ${patient.lastName}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Email:</strong>
+          <span>${patient.email}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Phone:</strong>
+          <span>${patient.phone}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Date of Birth:</strong>
+          <span>${formatDate(patient.dateOfBirth)}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Address:</strong>
+          <span>${patient.address.street}, ${patient.address.city}, ${patient.address.state} ${patient.address.zipcode}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Country:</strong>
+          <span>${patient.address.country}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Insurance Company:</strong>
+          <span>${patient.insurance.company || 'Not provided'}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Insurance ID:</strong>
+          <span>${patient.insurance.id || 'Not provided'}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Registration Date:</strong>
+          <span>${formatDate(patient.registrationDate)}</span>
+        </div>
+        <div class="detail-row">
+          <strong>Total Appointments:</strong>
+          <span>${patientAppointments.length}</span>
+        </div>
+      `;
+
+      document.getElementById('patientModal').classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.remove('active');
+    }
+
+    function deletePatient(patientId) {
+      if (confirm('Are you sure you want to delete this patient? This action cannot be undone.')) {
+        let patients = getPatients();
+        patients = patients.filter(p => p.id !== patientId);
+        localStorage.setItem('patients', JSON.stringify(patients));
+        
+        showAlert('Patient deleted successfully', 'success');
+        loadPatientsTable();
+        loadDashboardData();
+      }
+    }
+
+    function cancelAppointmentAdmin(appointmentId) {
+      if (confirm('Are you sure you want to cancel this appointment?')) {
+        cancelAppointment(appointmentId);
+        showAlert('Appointment cancelled', 'success');
+        loadAppointmentsTable();
+        loadDashboardData();
+      }
+    }
+
+    function exportPatientsData() {
+      const patients = getPatients();
+      const csv = generateCSV(patients, ['firstName', 'lastName', 'email', 'phone', 'dateOfBirth']);
+      downloadCSV(csv, 'patients_database.csv');
+    }
+
+    function exportAppointmentsData() {
+      const appointments = getAppointments();
+      const csv = generateCSV(appointments, ['patientName', 'service', 'date', 'time', 'dentist', 'status']);
+      downloadCSV(csv, 'appointments_database.csv');
+    }
+
+    function generateCSV(data, columns) {
+      const headers = columns.join(',');
+      const rows = data.map(item => columns.map(col => {
+        let value = item[col];
+        if (typeof value === 'object') value = JSON.stringify(value);
+        return `"${value}"`;
+      }).join(','));
+      return [headers, ...rows].join('\n');
+    }
+
+    function downloadCSV(csv, filename) {
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+
+    function backupData() {
+      const backup = {
+        patients: getPatients(),
+        appointments: getAppointments(),
+        timestamp: new Date().toISOString()
+      };
+      const json = JSON.stringify(backup, null, 2);
+      const blob = new Blob([json], { type: 'application/json' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `smilecare_backup_${new Date().getTime()}.json`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      showAlert('Backup created successfully', 'success');
+    }
+
+    function updateStorageStats() {
+      const patients = getPatients();
+      const appointments = getAppointments();
+      const totalRecords = patients.length + appointments.length;
+      const storageUsed = (JSON.stringify({ patients, appointments }).length / 1024).toFixed(2);
+
+      document.getElementById('totalRecords').textContent = totalRecords;
+      document.getElementById('storageUsed').textContent = storageUsed + ' KB';
+    }
+
+    function clearAllData() {
+      if (confirm('WARNING: This will delete ALL patient and appointment data. This action cannot be undone. Are you absolutely sure?')) {
+        if (confirm('Please confirm again by clicking OK')) {
+          localStorage.setItem('patients', JSON.stringify([]));
+          localStorage.setItem('appointments', JSON.stringify([]));
+          showAlert('All data cleared', 'warning');
+          loadDashboardData();
+        }
+      }
+    }
+
+    const menuItems = document.querySelectorAll('.menu-item');
+    const sections = document.querySelectorAll('.section-content');
+
+    menuItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        menuItems.forEach(m => m.classList.remove('active'));
+        item.classList.add('active');
+
+        const sectionId = item.dataset.section + '-section';
+        sections.forEach(section => section.style.display = 'none');
+        document.getElementById(sectionId).style.display = 'block';
+      });
+    });
+
+    document.getElementById('patientSearch')?.addEventListener('input', loadPatientsTable);
+    document.getElementById('appointmentSearch')?.addEventListener('input', loadAppointmentsTable);
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('adminUser');
+      showAlert('Admin logged out', 'success');
+      setTimeout(() => {
+        window.location.href = 'admin-login.html';
+      }, 1000);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDashboardData();
+    });
+  </script>
+</body>
+</html>

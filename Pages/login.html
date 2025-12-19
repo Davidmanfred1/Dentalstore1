@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Login - SmileCare Dental</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .login-link a {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+
+    .login-divider {
+      text-align: center;
+      margin: 2rem 0;
+      color: var(--light-text);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar container">
+      <div class="logo">SmileCare Dental</div>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <a href="register.html" class="btn btn-primary">Register</a>
+        <a href="login.html" class="btn btn-outline">Login</a>
+      </div>
+      <button class="menu-toggle">☰</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+          <h1>Patient Login</h1>
+          <p>Access your account and manage your appointments</p>
+        </div>
+        <div style="flex: 1; min-width: 300px; text-align: center;">
+          <img src="../assets/ai-generated-a-woman-with-a-perfect-smile-sits-comfortably-in-a-dental-chair-radiating-confidence-generative-ai-free-photo.jpg" alt="Patient care" style="width: 100%; max-width: 400px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="login-container">
+      <div class="card">
+        <div class="card-body">
+          <h2 style="text-align: center; margin-bottom: 2rem;">Welcome Back</h2>
+          
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+              <label style="display: flex; align-items: center;">
+                <input type="checkbox" id="rememberMe" name="rememberMe" style="width: auto; margin-right: 0.5rem;">
+                <span>Remember me</span>
+              </label>
+              <a href="#" class="text-primary" style="font-size: 0.9rem;">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full" style="margin-top: 1.5rem;">Login</button>
+          </form>
+
+          <div class="login-divider">or</div>
+
+          <div class="login-link">
+            <p>Don't have an account? <a href="register.html">Register here</a></p>
+          </div>
+
+          <div style="background-color: var(--light-bg); padding: 1rem; border-radius: 5px; margin-top: 1.5rem; font-size: 0.9rem;">
+            <p><strong>Demo Account:</strong></p>
+            <p>Email: demo@example.com</p>
+            <p>Password: Demo@123</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SmileCare Dental</h4>
+          <p>Your partner in dental health and beautiful smiles.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="services.html">Services</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Contact Info</h4>
+          <a href="tel:+1234567890">+1 (234) 567-8900</a>
+          <a href="mailto:info@smilecare.com">info@smilecare.com</a>
+          <p>123 Dental Street, City, ST 12345</p>
+        </div>
+        <div class="footer-section">
+          <h4>Hours</h4>
+          <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+          <p>Saturday: 10:00 AM - 4:00 PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SmileCare Dental Practice. All rights reserved. | <a href="admin-login.html" style="color: #bbb; font-size: 0.9rem;">Admin Portal</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const email = form.email.value.trim();
+      const password = form.password.value;
+
+      if (!email || !password) {
+        showAlert('Please enter both email and password', 'warning');
+        return;
+      }
+
+      const patient = getPatientByEmail(email);
+
+      if (!patient) {
+        showAlert('Email not found. Please register first.', 'danger');
+        return;
+      }
+
+      if (patient.password !== password) {
+        showAlert('Incorrect password. Please try again.', 'danger');
+        return;
+      }
+
+      setCurrentUser(patient);
+      showAlert('Login successful! Redirecting to your dashboard...', 'success');
+
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1500);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (isUserLoggedIn()) {
+        window.location.href = 'dashboard.html';
+      }
+    });
+  </script>
+</body>
+</html>

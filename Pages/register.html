@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Registration - SmileCare Dental</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .register-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .password-strength {
+      margin-top: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .strength-weak {
+      color: var(--danger-color);
+    }
+
+    .strength-medium {
+      color: #ff9800;
+    }
+
+    .strength-strong {
+      color: var(--success-color);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+
+    .register-link a {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar container">
+      <div class="logo">SmileCare Dental</div>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <a href="register.html" class="btn btn-primary">Register</a>
+        <a href="login.html" class="btn btn-outline">Login</a>
+      </div>
+      <button class="menu-toggle">☰</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+          <h1>Patient Registration</h1>
+          <p>Join SmileCare Dental family</p>
+        </div>
+        <div style="flex: 1; min-width: 300px; text-align: center;">
+          <img src="../assets/ai-generated-a-woman-with-a-perfect-smile-sits-comfortably-in-a-dental-chair-radiating-confidence-generative-ai-free-photo.jpg" alt="Smiling patient" style="width: 100%; max-width: 400px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="register-container">
+      <div class="card">
+        <div class="card-body">
+          <h2 style="text-align: center; margin-bottom: 2rem;">Create Your Account</h2>
+          
+          <form id="registrationForm">
+            <h3 style="font-size: 1rem; margin-bottom: 1rem;">Personal Information</h3>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" placeholder="John" required>
+              </div>
+              <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" name="email" placeholder="john@example.com" required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required>
+            </div>
+
+            <div class="form-group">
+              <label for="dob">Date of Birth</label>
+              <input type="date" id="dob" name="dob" required>
+            </div>
+
+            <h3 style="font-size: 1rem; margin: 1.5rem 0 1rem 0;">Address Information</h3>
+
+            <div class="form-group">
+              <label for="address">Street Address</label>
+              <input type="text" id="address" name="address" placeholder="123 Main Street" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" placeholder="New York" required>
+              </div>
+              <div class="form-group">
+                <label for="state">State/Province</label>
+                <input type="text" id="state" name="state" placeholder="NY" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="zipcode">Zip/Postal Code</label>
+                <input type="text" id="zipcode" name="zipcode" placeholder="10001" required>
+              </div>
+              <div class="form-group">
+                <label for="country">Country</label>
+                <input type="text" id="country" name="country" placeholder="United States" required>
+              </div>
+            </div>
+
+            <h3 style="font-size: 1rem; margin: 1.5rem 0 1rem 0;">Insurance Information (Optional)</h3>
+
+            <div class="form-group">
+              <label for="insuranceCompany">Insurance Company</label>
+              <input type="text" id="insuranceCompany" name="insuranceCompany" placeholder="Your Insurance Provider">
+            </div>
+
+            <div class="form-group">
+              <label for="insuranceId">Insurance ID</label>
+              <input type="text" id="insuranceId" name="insuranceId" placeholder="Your Policy/ID Number">
+            </div>
+
+            <h3 style="font-size: 1rem; margin: 1.5rem 0 1rem 0;">Account Credentials</h3>
+
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" name="password" placeholder="Enter password" required>
+              <div class="password-strength" id="strengthIndicator"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input type="password" id="confirmPassword" name="confirm_password" placeholder="Confirm password" required>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center;">
+              <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+              <label for="agreeTerms" style="margin-bottom: 0; margin-left: 0.5rem;">
+                I agree to the Terms of Service and Privacy Policy
+              </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full" style="margin-top: 1.5rem;">Create Account</button>
+          </form>
+
+          <div class="register-link">
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SmileCare Dental</h4>
+          <p>Your partner in dental health and beautiful smiles.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="services.html">Services</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Contact Info</h4>
+          <a href="tel:+1234567890">+1 (234) 567-8900</a>
+          <a href="mailto:info@smilecare.com">info@smilecare.com</a>
+          <p>123 Dental Street, City, ST 12345</p>
+        </div>
+        <div class="footer-section">
+          <h4>Hours</h4>
+          <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+          <p>Saturday: 10:00 AM - 4:00 PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SmileCare Dental Practice. All rights reserved. | <a href="admin-login.html" style="color: #bbb; font-size: 0.9rem;">Admin Portal</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const passwordInput = document.getElementById('password');
+    const strengthIndicator = document.getElementById('strengthIndicator');
+
+    passwordInput.addEventListener('input', () => {
+      const password = passwordInput.value;
+      let strength = 'weak';
+      
+      if (password.length >= 8 && /[A-Z]/.test(password) && /[0-9]/.test(password)) {
+        strength = 'strong';
+      } else if (password.length >= 6) {
+        strength = 'medium';
+      }
+
+      strengthIndicator.textContent = `Password strength: ${strength.toUpperCase()}`;
+      strengthIndicator.className = `password-strength strength-${strength}`;
+    });
+
+    document.getElementById('registrationForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = e.target;
+
+      if (!validateForm(form)) {
+        return;
+      }
+
+      const agreeTerms = document.getElementById('agreeTerms');
+      if (!agreeTerms.checked) {
+        showAlert('Please agree to the Terms of Service and Privacy Policy', 'warning');
+        return;
+      }
+
+      const formData = new FormData(form);
+      const patientData = {
+        firstName: formData.get('firstName'),
+        lastName: formData.get('lastName'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        dateOfBirth: formData.get('dob'),
+        address: {
+          street: formData.get('address'),
+          city: formData.get('city'),
+          state: formData.get('state'),
+          zipcode: formData.get('zipcode'),
+          country: formData.get('country')
+        },
+        insurance: {
+          company: formData.get('insuranceCompany'),
+          id: formData.get('insuranceId')
+        },
+        password: formData.get('password'),
+        registrationDate: new Date().toISOString()
+      };
+
+      const result = savePatient(patientData);
+
+      if (result.success) {
+        showAlert(result.message, 'success');
+        form.reset();
+        strengthIndicator.textContent = '';
+        
+        setTimeout(() => {
+          setCurrentUser(patientData);
+          window.location.href = 'dashboard.html';
+        }, 1500);
+      } else {
+        showAlert(result.message, 'danger');
+      }
+    });
+  </script>
+</body>
+</html>

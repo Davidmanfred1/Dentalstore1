@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Appointment - SmileCare Dental</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .booking-container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    .time-slots {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .time-slot {
+      padding: 0.75rem;
+      border: 2px solid var(--border-color);
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background-color: white;
+    }
+
+    .time-slot:hover:not(:disabled) {
+      border-color: var(--primary-color);
+      background-color: var(--light-bg);
+    }
+
+    .time-slot.selected {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+    }
+
+    .time-slot:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background-color: #f0f0f0;
+    }
+
+    .booking-summary {
+      background-color: var(--light-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-top: 2rem;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      font-size: 0.95rem;
+    }
+
+    .summary-row strong {
+      color: var(--primary-color);
+    }
+
+    .booking-form-section {
+      margin-bottom: 2rem;
+    }
+
+    .booking-form-section h3 {
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .time-slots {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="navbar container">
+      <div class="logo">SmileCare Dental</div>
+      <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <div class="nav-buttons">
+        <a href="register.html" class="btn btn-primary">Register</a>
+        <a href="login.html" class="btn btn-outline">Login</a>
+      </div>
+      <button class="menu-toggle">☰</button>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="container">
+      <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 300px;">
+          <h1>Book Your Appointment</h1>
+          <p>Schedule your visit to SmileCare Dental</p>
+        </div>
+        <div style="flex: 1; min-width: 300px; text-align: center;">
+          <img src="../assets/4ba003d85204accaec805a405947351a.jpg" alt="Book appointment" style="width: 100%; max-width: 400px; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section container">
+    <div class="booking-container">
+      <div class="card">
+        <div class="card-body">
+          <form id="bookingForm">
+            <div class="booking-form-section">
+              <h3>Patient Information</h3>
+              
+              <div id="patientInfo">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="John" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="phone">Phone Number</label>
+                  <input type="tel" id="phone" name="phone" placeholder="(123) 456-7890" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="booking-form-section">
+              <h3>Appointment Details</h3>
+
+              <div class="form-group">
+                <label for="service">Service Type</label>
+                <select id="service" name="service" required>
+                  <option value="">Select a service</option>
+                  <option value="checkup">General Checkup & Cleaning</option>
+                  <option value="whitening">Teeth Whitening</option>
+                  <option value="filling">Cavity Filling</option>
+                  <option value="root-canal">Root Canal Therapy</option>
+                  <option value="extraction">Teeth Extraction</option>
+                  <option value="implant">Dental Implant</option>
+                  <option value="orthodontics">Orthodontics Consultation</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dentist">Preferred Dentist</label>
+                <select id="dentist" name="dentist" required>
+                  <option value="">Select a dentist</option>
+                  <option value="dr-sarah">Dr. Sarah Johnson (General & Cosmetic)</option>
+                  <option value="dr-michael">Dr. Michael Chen (Orthodontist)</option>
+                  <option value="dr-emily">Dr. Emily Rodriguez (Implants)</option>
+                  <option value="any">Any Available Dentist</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="appointmentDate">Preferred Date</label>
+                <input type="date" id="appointmentDate" name="appointmentDate" required>
+              </div>
+
+              <div class="form-group">
+                <label>Available Time Slots</label>
+                <div id="timeSlots" class="time-slots">
+                  <p style="grid-column: 1/-1; text-align: center; color: var(--light-text);">Please select a date first</p>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="notes">Additional Notes (Optional)</label>
+                <textarea id="notes" name="notes" placeholder="Any special requirements or concerns?"></textarea>
+              </div>
+            </div>
+
+            <div id="bookingSummary" class="booking-summary" style="display: none;">
+              <h3 style="margin-bottom: 1rem;">Appointment Summary</h3>
+              <div class="summary-row">
+                <span>Service:</span>
+                <strong id="summaryService">-</strong>
+              </div>
+              <div class="summary-row">
+                <span>Dentist:</span>
+                <strong id="summaryDentist">-</strong>
+              </div>
+              <div class="summary-row">
+                <span>Date:</span>
+                <strong id="summaryDate">-</strong>
+              </div>
+              <div class="summary-row">
+                <span>Time:</span>
+                <strong id="summaryTime">-</strong>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-success w-full" style="margin-top: 1.5rem;">Confirm Appointment</button>
+          </form>
+        </div>
+      </div>
+
+      <div style="background-color: var(--light-bg); padding: 1.5rem; border-radius: 8px; margin-top: 2rem; text-align: center;">
+        <h3>Our Hours</h3>
+        <p><strong>Monday - Friday:</strong> 9:00 AM - 6:00 PM</p>
+        <p><strong>Saturday:</strong> 10:00 AM - 4:00 PM</p>
+        <p><strong>Sunday:</strong> Closed</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>SmileCare Dental</h4>
+          <p>Your partner in dental health and beautiful smiles.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <a href="../index.html">Home</a>
+          <a href="about.html">About</a>
+          <a href="services.html">Services</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-section">
+          <h4>Contact Info</h4>
+          <a href="tel:+1234567890">+1 (234) 567-8900</a>
+          <a href="mailto:info@smilecare.com">info@smilecare.com</a>
+          <p>123 Dental Street, City, ST 12345</p>
+        </div>
+        <div class="footer-section">
+          <h4>Hours</h4>
+          <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+          <p>Saturday: 10:00 AM - 4:00 PM</p>
+          <p>Sunday: Closed</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 SmileCare Dental Practice. All rights reserved. | <a href="admin-login.html" style="color: #bbb; font-size: 0.9rem;">Admin Portal</a></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../js/main.js"></script>
+  <script>
+    const appointmentDateInput = document.getElementById('appointmentDate');
+    const timeSlotsContainer = document.getElementById('timeSlots');
+    const serviceSelect = document.getElementById('service');
+    const dentistSelect = document.getElementById('dentist');
+    const bookingSummary = document.getElementById('bookingSummary');
+    let selectedTime = null;
+
+    appointmentDateInput.addEventListener('change', () => {
+      const selectedDate = appointmentDateInput.value;
+      if (selectedDate) {
+        renderTimeSlots(selectedDate);
+      }
+    });
+
+    function renderTimeSlots(dateString) {
+      const slots = getAvailableTimeSlots(dateString);
+      timeSlotsContainer.innerHTML = '';
+
+      if (slots.length === 0) {
+        timeSlotsContainer.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--light-text);">No available slots for this date</p>';
+        return;
+      }
+
+      slots.forEach(slot => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'time-slot';
+        button.textContent = formatTime(slot);
+        button.dataset.time = slot;
+
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          document.querySelectorAll('.time-slot').forEach(b => b.classList.remove('selected'));
+          button.classList.add('selected');
+          selectedTime = slot;
+          updateSummary();
+        });
+
+        timeSlotsContainer.appendChild(button);
+      });
+    }
+
+    function updateSummary() {
+      if (selectedTime) {
+        document.getElementById('summaryService').textContent = serviceSelect.options[serviceSelect.selectedIndex].text;
+        document.getElementById('summaryDentist').textContent = dentistSelect.options[dentistSelect.selectedIndex].text;
+        document.getElementById('summaryDate').textContent = formatDate(appointmentDateInput.value);
+        document.getElementById('summaryTime').textContent = formatTime(selectedTime);
+        bookingSummary.style.display = 'block';
+      }
+    }
+
+    serviceSelect.addEventListener('change', updateSummary);
+    dentistSelect.addEventListener('change', updateSummary);
+
+    document.getElementById('bookingForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      if (!selectedTime) {
+        showAlert('Please select a time slot', 'warning');
+        return;
+      }
+
+      const form = e.target;
+      if (!validateForm(form)) {
+        return;
+      }
+
+      const formData = new FormData(form);
+      const appointmentData = {
+        patientName: `${formData.get('firstName')} ${formData.get('lastName')}`,
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        service: formData.get('service'),
+        dentist: formData.get('dentist'),
+        date: formData.get('appointmentDate'),
+        time: selectedTime,
+        notes: formData.get('notes'),
+        bookingDate: new Date().toISOString(),
+        status: 'confirmed'
+      };
+
+      const result = saveAppointment(appointmentData);
+
+      if (result.success) {
+        showAlert('Appointment booked successfully!', 'success');
+        setTimeout(() => {
+          window.location.href = `confirmation.html?id=${result.appointmentId}`;
+        }, 1500);
+      } else {
+        showAlert('Error booking appointment. Please try again.', 'danger');
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const today = new Date().toISOString().split('T')[0];
+      appointmentDateInput.setAttribute('min', today);
+
+      const currentUser = getCurrentUser();
+      if (currentUser) {
+        document.getElementById('firstName').value = currentUser.firstName || '';
+        document.getElementById('lastName').value = currentUser.lastName || '';
+        document.getElementById('email').value = currentUser.email || '';
+        document.getElementById('phone').value = currentUser.phone || '';
+      }
+    });
+  </script>
+</body>
+</html>
